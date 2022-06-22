@@ -1,6 +1,6 @@
 import styles from "./GameGrid.module.css";
 
-type MatchUpCellData = {
+export type MatchUpCellData = {
   home: boolean;
   away: boolean;
   /**
@@ -21,7 +21,7 @@ export type MatchUpRowData = {
   Sun?: MatchUpCellData;
 };
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+export const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function MatchUpRow(props: MatchUpRowData) {
   return (
@@ -56,7 +56,13 @@ function MatchUpCell({ home, away, logo, score }: MatchUpCellData) {
   return (
     <td>
       <div style={{ display: "flex" }}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginRight: "4px",
+          }}
+        >
           <span className={styles.homeAway}>
             {home && "HOME"}
             {away && "AWAY"}
