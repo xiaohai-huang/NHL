@@ -89,7 +89,7 @@ function useMatchUps(start: string, end: string): [MatchUpRowData[], number[]] {
             -1;
           if (!exist) {
             paddedMatchUps.push({ teamName: team.name });
-            console.log("add team: " + team.name);
+            // console.log("add team: " + team.name);
           }
         });
         paddedMatchUps.sort((a, b) => a.teamName.localeCompare(b.teamName));

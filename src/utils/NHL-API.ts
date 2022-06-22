@@ -1,3 +1,4 @@
+import { parseDateStr } from "../components/GameGrid/Header";
 import { DAYS, MatchUpCellData, MatchUpRowData } from "../components/GameGrid/MatchUpRow";
 import { getDayStr } from "./date-func";
 
@@ -17,6 +18,10 @@ type Game = {
      * e.g. 2022-04-27T23:30:00Z
      */
     gameDate:string;
+    /**
+     * 2022-04-27
+     */
+    date:string;
     teams:{
         home:{
             team:Team;
@@ -42,13 +47,12 @@ export async function getMatchUps(start:string, end:string): Promise<[MatchUpRow
     const temp1:{[day:string]:number} = {}
     const totalGamesPerDay:number[] = [];
     dates.forEach(({date,totalGames, games}:{date:string;totalGames:number; games:Game[]})=>{
-        const day = getDayStr(new Date(date));
+        const day = getDayStr(parseDateStr(date));
         temp1[day] = totalGames;
 
-        
         // use the Gregorian calendar day
         games.forEach(game=>{
-            game.gameDate = date; 
+            game.date = date; 
         })
     })
 
@@ -62,20 +66,20 @@ export async function getMatchUps(start:string, end:string): Promise<[MatchUpRow
     // console.log(games);
 
     games.forEach(game=>{
-        const day = getDayStr(new Date(game.gameDate));
-        
+        const day = getDayStr(parseDateStr(game.date));
+                
         const {home, away} = game.teams;
         temp[home.team.name] = {...temp[home.team.name], [day]:{
             home:true,
             away:false,
-            logo:getTeamLogo(home.team.name),
+            logo:getTeamLogo(away.team.name),
             score:home.score
         }}
 
         temp[away.team.name] = {...temp[away.team.name], [day]:{
             home:false,
             away:true,
-            logo:getTeamLogo(away.team.name),
+            logo:getTeamLogo(home.team.name),
             score:away.score
         }}
     })
