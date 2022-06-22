@@ -1,15 +1,10 @@
 import { useState } from "react";
 
-import {
-  addDays,
-  dateDiffInDays,
-  formatDate,
-  getDayStr,
-} from "../../utils/date-func";
 import MatchUpRow, { MatchUpRowData } from "./MatchUpRow";
 import TotalGamesPerDayRow from "./TotalGamesPerDayRow";
 
 import styles from "./GameGrid.module.css";
+import Header from "./Header";
 
 const defaultData: MatchUpRowData[] = [
   {
@@ -54,7 +49,12 @@ const defaultData: MatchUpRowData[] = [
       score: 71.03,
     },
   },
+  {
+    teamName: "xiaohai",
+  },
 ];
+
+function useData(start: string, end: string) {}
 
 export default function GameGrid() {
   const [data, setData] = useState(() => [...defaultData]);
@@ -63,20 +63,10 @@ export default function GameGrid() {
     "2022-06-20",
     "2022-06-26",
   ]);
-  const columns = [
-    { label: "Team Name", id: "teamName" },
-    ...getDayColumns(...dates),
-    { label: "Total GP", id: "totalGP" },
-  ];
+
   return (
     <table className={styles.scheduleGrid}>
-      <thead>
-        <tr>
-          {columns.map((column) => (
-            <th key={column.id}>{column.label}</th>
-          ))}
-        </tr>
-      </thead>
+      <Header start={dates[0]} end={dates[1]} />
       <tbody>
         {/* Total Games Per Day */}
         <TotalGamesPerDayRow games={[0, 1, 0, 1, 0, 0, 1]} />
@@ -87,28 +77,4 @@ export default function GameGrid() {
       </tbody>
     </table>
   );
-}
-
-function getDayColumns(start: string, end: string) {
-  // "2022-06-20", "2022-06-20"
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-
-  const days = dateDiffInDays(startDate, endDate);
-  const columns = [] as { label: JSX.Element | string; id: string }[];
-  let current = startDate;
-  for (let i = 0; i <= days; i++) {
-    columns.push({
-      label: (
-        <>
-          {getDayStr(current)}
-          <br /> {formatDate(current)}
-        </>
-      ),
-      id: getDayStr(current),
-    });
-    current = addDays(current, 1);
-  }
-
-  return columns;
 }
