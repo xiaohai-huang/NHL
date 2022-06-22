@@ -13,6 +13,8 @@ function TotalGamesPerDayRow({ games }: TotalGamesPerDayRowProps) {
           {numGames}
         </td>
       ))}
+      {/* Total GP (last column) */}
+      <td>{games.reduce((prev, current) => prev + current, 0)}</td>
     </tr>
   );
 }

@@ -82,9 +82,7 @@ export default function GameGrid() {
         <TotalGamesPerDayRow games={[0, 1, 0, 1, 0, 0, 1]} />
         {/* Teams */}
         {data.map((row) => (
-          <tr key={row.teamName}>
-            <MatchUpRow {...row} />
-          </tr>
+          <MatchUpRow key={row.teamName} {...row} />
         ))}
       </tbody>
     </table>

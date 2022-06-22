@@ -25,7 +25,7 @@ const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function MatchUpRow(props: MatchUpRowData) {
   return (
-    <>
+    <tr>
       {/* Team Name */}
       <td>{props.teamName}</td>
       {/* Days */}
@@ -35,8 +35,21 @@ function MatchUpRow(props: MatchUpRowData) {
         if (!cellData) return <td key={day}>-</td>;
         return <MatchUpCell key={day} {...cellData} />;
       })}
-    </>
+
+      {/* Total Game Played */}
+      <td>{getTotalGamePlayed(props)}</td>
+    </tr>
   );
+}
+
+function getTotalGamePlayed(matchUps: MatchUpRowData) {
+  let num = 0;
+  DAYS.forEach((day) => {
+    // @ts-ignore
+    const matchUp = matchUps[day];
+    if (matchUp) num++;
+  });
+  return num;
 }
 
 function MatchUpCell({ home, away, logo, score }: MatchUpCellData) {
