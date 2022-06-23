@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
-import MatchUpRow, { MatchUpRowData } from "./MatchUpRow";
+import Header from "./Header";
+import MatchUpRow, { DAYS, MatchUpRowData } from "./MatchUpRow";
 import TotalGamesPerDayRow from "./TotalGamesPerDayRow";
 
 import styles from "./GameGrid.module.css";
-import Header from "./Header";
 import { getAllTeams, getMatchUps, Team } from "../../utils/NHL-API";
 import { addDays } from "../../utils/date-func";
 
@@ -114,6 +114,16 @@ export default function GameGrid() {
     "2022-06-19",
   ]);
   const [matchUps, totalGamesPerDay] = useMatchUps(...dates);
+  const offNights = useMemo(() => {
+    const days: string[] = [];
+    totalGamesPerDay.forEach((numGames, i) => {
+      // when a day has <= 8 games, mark that day as off night
+      if (numGames <= 8) {
+        days.push(DAYS[i]);
+      }
+    });
+    return days;
+  }, [totalGamesPerDay]);
 
   const handleClick = (action: string) => () => {
     let days = 7;
@@ -137,9 +147,14 @@ export default function GameGrid() {
           {/* Total Games Per Day */}
           <TotalGamesPerDayRow games={totalGamesPerDay} />
           {/* Teams */}
-          {matchUps.map((row) => (
-            <MatchUpRow key={row.teamName} {...row} />
-          ))}
+          {matchUps.map((row) => {
+            const rowData = { ...row };
+            offNights.forEach((day) => {
+              // @ts-ignore
+              rowData[day] = { ...rowData[day], offNight: true };
+            });
+            return <MatchUpRow key={row.teamName} {...rowData} />;
+          })}
         </tbody>
       </table>
     </>

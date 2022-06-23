@@ -8,6 +8,11 @@ export type MatchUpCellData = {
    */
   logo: string;
   score: number;
+  /**
+   * if the total # of games played that day was <=8
+   * to signify what I call an “Off-Night”
+   */
+  offNight: boolean;
 };
 
 export type MatchUpRowData = {
@@ -32,8 +37,12 @@ function MatchUpRow(props: MatchUpRowData) {
       {DAYS.map((day) => {
         // @ts-ignore
         const cellData = props[day] as MatchUpCellData | undefined;
-        if (!cellData) return <td key={day}>-</td>;
-        return <MatchUpCell key={day} {...cellData} />;
+        const hasMatchUp = cellData?.away || cellData?.home;
+        return (
+          <td style={cellData?.offNight ? { backgroundColor: "#505050" } : {}}>
+            {hasMatchUp ? <MatchUpCell key={day} {...cellData} /> : "-"}
+          </td>
+        );
       })}
 
       {/* Total Game Played */}
@@ -52,26 +61,24 @@ function getTotalGamePlayed(matchUps: MatchUpRowData) {
   return num;
 }
 
-function MatchUpCell({ home, away, logo, score }: MatchUpCellData) {
+function MatchUpCell({ home, away, logo, score, offNight }: MatchUpCellData) {
   return (
-    <td>
-      <div style={{ display: "flex" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            marginRight: "4px",
-          }}
-        >
-          <span className={styles.homeAway}>
-            {home && "HOME"}
-            {away && "AWAY"}
-          </span>
-          <p className={styles.score}>{score}</p>
-        </div>
-        <img alt="Team logo" width={30} height={30} src={logo} />
+    <div style={{ display: "flex" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          marginRight: "4px",
+        }}
+      >
+        <span className={styles.homeAway}>
+          {home && "HOME"}
+          {away && "AWAY"}
+        </span>
+        <p className={styles.score}>{score}</p>
       </div>
-    </td>
+      <img alt="Team logo" width={30} height={30} src={logo} />
+    </div>
   );
 }
 
