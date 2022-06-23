@@ -92,7 +92,9 @@ export async function getTeams(
         home: true,
         away: false,
         logo: getTeamLogo(away.team.name),
-        score: home.score,
+        win: home.score > away.score,
+        loss: home.score < away.score,
+        score: `${home.score}-${away.score}`,
       },
     };
 
@@ -102,7 +104,9 @@ export async function getTeams(
         home: false,
         away: true,
         logo: getTeamLogo(home.team.name),
-        score: away.score,
+        win: away.score > home.score,
+        loss: away.score < home.score,
+        score: `${away.score}-${home.score}`,
       },
     };
   });

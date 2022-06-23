@@ -7,7 +7,12 @@ export type MatchUpCellData = {
    * URL, the opponent's team logo.
    */
   logo: string;
-  score: number;
+  win: boolean;
+  loss: boolean;
+  /**
+   * e.g., "2-6"
+   */
+  score: string;
   /**
    * if the total # of games played that day was <=8
    * to signify what I call an “Off-Night”
@@ -59,7 +64,7 @@ function TeamRow(props: TeamRowData) {
   );
 }
 
-function MatchUpCell({ home, away, logo, score }: MatchUpCellData) {
+function MatchUpCell({ win, loss, logo, score }: MatchUpCellData) {
   return (
     <div style={{ display: "flex" }}>
       <div
@@ -70,8 +75,8 @@ function MatchUpCell({ home, away, logo, score }: MatchUpCellData) {
         }}
       >
         <span className={styles.homeAway}>
-          {home && "HOME"}
-          {away && "AWAY"}
+          {win && "WIN"}
+          {loss && "LOSS"}
         </span>
         <p className={styles.score}>{score}</p>
       </div>
