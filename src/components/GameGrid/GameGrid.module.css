@@ -23,12 +23,51 @@ body {
   font-family: "Alegreya Sans SC", sans-serif;
 }
 
+.dateButtonPrev {
+  position: relative;
+  left: 25%;
+  height: 35px;
+  width: 115px;
+  background: #07aae2;
+  color: #ffffff;
+  border: 1px solid white;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 8px;
+}
+
+.dateButtonPrev:hover {
+  height: 35px;
+  background: #057fa9;
+  border: 2px solid white;
+}
+
+.dateButtonNext {
+  position: relative;
+  left: 40%;
+  height: 35px;
+  width: 115px;
+  background: #07aae2;
+  color: #ffffff;
+  border: 1px solid white;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 8px;
+}
+
+.dateButtonNext:hover {
+  height: 35px;
+  background: #057fa9;
+  border: 2px solid white;
+}
+
 .scheduleGrid {
   color: white;
   border: 5px solid #ffffff;
   border-radius: 8px;
   font-size: 16px;
   text-align: left;
+  margin-top: 25px;
 }
 
 .scheduleGrid th {

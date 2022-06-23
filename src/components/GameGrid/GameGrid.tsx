@@ -139,8 +139,12 @@ export default function GameGrid() {
 
   return (
     <>
-      <button onClick={handleClick("PREV")}>Prev</button>
-      <button onClick={handleClick("NEXT")}>Next</button>
+      <button className={styles.dateButtonPrev} onClick={handleClick("PREV")}>
+        Prev
+      </button>
+      <button className={styles.dateButtonNext} onClick={handleClick("NEXT")}>
+        Next
+      </button>
       <table className={styles.scheduleGrid}>
         <Header start={dates[0]} end={dates[1]} />
         <tbody>
