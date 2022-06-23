@@ -52,8 +52,6 @@ export function startAndEndOfWeek(date?: Date): [string, string] {
   var sunday = new Date(now);
   sunday.setDate(sunday.getDate() - sunday.getDay() + 7);
 
-  console.log([formatYYMMDD(monday), formatYYMMDD(sunday)]);
-
   // Return array of date objects
   return [formatYYMMDD(monday), formatYYMMDD(sunday)];
 }

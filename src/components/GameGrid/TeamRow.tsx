@@ -4,7 +4,7 @@ export type MatchUpCellData = {
   home: boolean;
   away: boolean;
   /**
-   * URL, the team's logo.
+   * URL, the opponent's team logo.
    */
   logo: string;
   score: number;
@@ -15,7 +15,7 @@ export type MatchUpCellData = {
   offNight: boolean;
 };
 
-export type MatchUpRowData = {
+export type TeamRowData = {
   teamName: string;
   Mon?: MatchUpCellData;
   Tue?: MatchUpCellData;
@@ -24,11 +24,13 @@ export type MatchUpRowData = {
   Fri?: MatchUpCellData;
   Sat?: MatchUpCellData;
   Sun?: MatchUpCellData;
+  totalGamesPlayed: number;
+  totalOffNights: number;
 };
 
 export const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-function MatchUpRow(props: MatchUpRowData) {
+function TeamRow(props: TeamRowData) {
   return (
     <tr>
       {/* Team Name */}
@@ -48,22 +50,12 @@ function MatchUpRow(props: MatchUpRowData) {
         );
       })}
 
-      {/* Total Game Played */}
-      <td>{getTotalGamePlayed(props)}</td>
+      {/* Total Games Played */}
+      <td>{props.totalGamesPlayed}</td>
       {/* Total Off-Nights */}
-      <td>{calcTotalOffNights(props)}</td>
+      <td>{props.totalOffNights}</td>
     </tr>
   );
-}
-
-function getTotalGamePlayed(matchUps: MatchUpRowData) {
-  let num = 0;
-  DAYS.forEach((day) => {
-    // @ts-ignore
-    const hasMatchUp_ = hasMatchUp(matchUps[day]);
-    if (hasMatchUp_) num++;
-  });
-  return num;
 }
 
 function MatchUpCell({ home, away, logo, score }: MatchUpCellData) {
@@ -97,20 +89,4 @@ function hasMatchUp(matchUp: MatchUpCellData) {
   return matchUp?.away || matchUp?.home;
 }
 
-/**
- * If a team plays game at off night day, then increment counter by 1.
- * @param matchUps All match ups. Monday ~ Sunday
- * @returns Total Off Nights
- */
-function calcTotalOffNights(matchUps: MatchUpRowData) {
-  let num = 0;
-  DAYS.forEach((day) => {
-    // @ts-ignore
-    const matchUp: MatchUpCellData = matchUps[day];
-    const hasMatchUp_ = hasMatchUp(matchUp);
-    if (hasMatchUp_ && matchUp.offNight) num++;
-  });
-  return num;
-}
-
-export default MatchUpRow;
+export default TeamRow;

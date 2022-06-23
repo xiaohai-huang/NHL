@@ -1,111 +1,13 @@
-import { useEffect, useState, useMemo } from "react";
-
-import Header from "./Header";
-import MatchUpRow, { DAYS, MatchUpRowData } from "./MatchUpRow";
-import TotalGamesPerDayRow from "./TotalGamesPerDayRow";
-
-import styles from "./GameGrid.module.css";
-import { getAllTeams, getMatchUps, Team } from "../../utils/NHL-API";
-import { addDays, startAndEndOfWeek } from "../../utils/date-func";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-// const defaultData: MatchUpRowData[] = [
-//   {
-//     teamName: "Colorado Avalanche",
-//     Tue: {
-//       home: true,
-//       away: false,
-//       logo: "http://127.0.0.1:5500/teamLogos/Tampa%20Bay%20Lightning.png",
-//       score: 7.33,
-//     },
-//     Thu: {
-//       home: false,
-//       away: true,
-//       logo: "http://127.0.0.1:5500/teamLogos/Tampa%20Bay%20Lightning.png",
-//       score: 6.9,
-//     },
-//     Sun: {
-//       home: false,
-//       away: true,
-//       logo: "http://127.0.0.1:5500/teamLogos/Tampa%20Bay%20Lightning.png",
-//       score: 1.03,
-//     },
-//   },
-//   {
-//     teamName: "Tampa Bay Lightning",
-//     Tue: {
-//       home: false,
-//       away: true,
-//       logo: "http://127.0.0.1:5500/teamLogos/Colorado%20Avalanche.png",
-//       score: 0.33,
-//     },
-//     Thu: {
-//       home: true,
-//       away: false,
-//       logo: "http://127.0.0.1:5500/teamLogos/Colorado%20Avalanche.png",
-//       score: 2.9,
-//     },
-//     Sun: {
-//       home: true,
-//       away: false,
-//       logo: "http://127.0.0.1:5500/teamLogos/Colorado%20Avalanche.png",
-//       score: 71.03,
-//     },
-//   },
-//   {
-//     teamName: "xiaohai",
-//   },
-// ];
+import Header from "./Header";
+import TeamRow from "./TeamRow";
+import TotalGamesPerDayRow from "./TotalGamesPerDayRow";
 
-function useMatchUps(start: string, end: string): [MatchUpRowData[], number[]] {
-  const [matchUps, setMatchUps] = useState<MatchUpRowData[]>([]);
-  const [totalGamesPerDay, setTotalGamesPerDay] = useState<number[]>([]);
-  const [allTeams, setAllTeams] = useState<Team[]>([]);
-
-  useEffect(() => {
-    let ignore = false;
-
-    (async () => {
-      const teams = await getAllTeams();
-      if (!ignore) {
-        setAllTeams(teams);
-      }
-    })();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    let ignore = false;
-    (async () => {
-      const [matchUps, totalGamesPerDay] = await getMatchUps(start, end);
-      if (!ignore) {
-        const paddedMatchUps = [...matchUps];
-        // add other teams even they are not playing
-        allTeams.forEach((team) => {
-          const exist =
-            matchUps.findIndex((matchUp) => matchUp.teamName === team.name) !==
-            -1;
-          if (!exist) {
-            paddedMatchUps.push({ teamName: team.name });
-            // console.log("add team: " + team.name);
-          }
-        });
-        paddedMatchUps.sort((a, b) => a.teamName.localeCompare(b.teamName));
-        setMatchUps(paddedMatchUps);
-        setTotalGamesPerDay(totalGamesPerDay);
-      }
-    })();
-
-    return () => {
-      ignore = true;
-    };
-  }, [start, end, allTeams]);
-
-  return [matchUps, totalGamesPerDay];
-}
+import { addDays, startAndEndOfWeek } from "../../utils/date-func";
+import useTeams from "../../hooks/useTeams";
+import styles from "./GameGrid.module.css";
 
 export default function GameGrid() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -113,18 +15,9 @@ export default function GameGrid() {
   const [dates, setDates] = useState<[string, string]>(() =>
     startAndEndOfWeek()
   );
-  const [matchUps, totalGamesPerDay] = useMatchUps(...dates);
-  const offNights = useMemo(() => {
-    const days: string[] = [];
-    totalGamesPerDay.forEach((numGames, i) => {
-      // when a day has <= 8 games, mark that day as off night
-      if (numGames <= 8) {
-        days.push(DAYS[i]);
-      }
-    });
-    return days;
-  }, [totalGamesPerDay]);
+  const [matchUps, totalGamesPerDay] = useTeams(...dates);
 
+  // PREV, NEXT button click
   const handleClick = (action: string) => () => {
     let days = 7;
     if (action === "PREV") days = -7;
@@ -151,6 +44,8 @@ export default function GameGrid() {
     };
   }, [searchParams]);
 
+  // console.log(matchUps);
+
   return (
     <>
       <button className={styles.dateButtonPrev} onClick={handleClick("PREV")}>
@@ -166,12 +61,7 @@ export default function GameGrid() {
           <TotalGamesPerDayRow games={totalGamesPerDay} />
           {/* Teams */}
           {matchUps.map((row) => {
-            const rowData = { ...row };
-            offNights.forEach((day) => {
-              // @ts-ignore
-              rowData[day] = { ...rowData[day], offNight: true };
-            });
-            return <MatchUpRow key={row.teamName} {...rowData} />;
+            return <TeamRow key={row.teamName} {...row} />;
           })}
         </tbody>
       </table>
