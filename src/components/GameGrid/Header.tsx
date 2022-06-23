@@ -14,6 +14,7 @@ function Header({ start, end }: HeaderProps) {
     { label: "Team Name", id: "teamName" },
     ...getDayColumns(start, end),
     { label: "Total GP", id: "totalGP" },
+    { label: "Total Off-Nights", id: "totalOffNights" },
   ];
   return (
     <thead>

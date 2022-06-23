@@ -50,6 +50,8 @@ function MatchUpRow(props: MatchUpRowData) {
 
       {/* Total Game Played */}
       <td>{getTotalGamePlayed(props)}</td>
+      {/* Total Off-Nights */}
+      <td>{calcTotalOffNights(props)}</td>
     </tr>
   );
 }
@@ -93,6 +95,22 @@ function MatchUpCell({ home, away, logo, score }: MatchUpCellData) {
  */
 function hasMatchUp(matchUp: MatchUpCellData) {
   return matchUp?.away || matchUp?.home;
+}
+
+/**
+ * If a team plays game at off night day, then increment counter by 1.
+ * @param matchUps All match ups. Monday ~ Sunday
+ * @returns Total Off Nights
+ */
+function calcTotalOffNights(matchUps: MatchUpRowData) {
+  let num = 0;
+  DAYS.forEach((day) => {
+    // @ts-ignore
+    const matchUp: MatchUpCellData = matchUps[day];
+    const hasMatchUp_ = hasMatchUp(matchUp);
+    if (hasMatchUp_ && matchUp.offNight) num++;
+  });
+  return num;
 }
 
 export default MatchUpRow;

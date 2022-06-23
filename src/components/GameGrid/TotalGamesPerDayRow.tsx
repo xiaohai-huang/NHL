@@ -13,10 +13,27 @@ function TotalGamesPerDayRow({ games }: TotalGamesPerDayRowProps) {
           {numGames}
         </td>
       ))}
-      {/* Total GP (last column) */}
+      {/* Total GP */}
       <td>{games.reduce((prev, current) => prev + current, 0)}</td>
+      {/* Total Off-Nights */}
+      <td>{calcTotalOffNights(games)}</td>
     </tr>
   );
+}
+
+/**
+ * That will be a total of a teams # of Games played
+ * that week on a day where <=8 games are occurring.
+ * @param games
+ */
+function calcTotalOffNights(games: number[]) {
+  let total = 0;
+  games.forEach((gamesPlayed) => {
+    if (gamesPlayed <= 8) {
+      total++;
+    }
+  });
+  return total;
 }
 
 export default TotalGamesPerDayRow;
