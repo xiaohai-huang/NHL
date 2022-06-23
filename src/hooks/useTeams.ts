@@ -53,7 +53,7 @@ export default function useTeams(
           });
         });
 
-        paddedTeams.sort((a, b) => a.teamName.localeCompare(b.teamName));
+        // paddedTeams.sort((a, b) => a.teamName.localeCompare(b.teamName));
         setTeams(paddedTeams);
         setTotalGamesPerDay(totalGamesPerDay);
       }

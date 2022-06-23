@@ -26,6 +26,7 @@ export type TeamRowData = {
   Sun?: MatchUpCellData;
   totalGamesPlayed: number;
   totalOffNights: number;
+  [key: string]: any;
 };
 
 export const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];

@@ -1,21 +1,74 @@
+import { Dispatch, SetStateAction, useState } from "react";
+
 import {
   addDays,
   dateDiffInDays,
   formatDate,
   getDayStr,
 } from "../../utils/date-func";
+import Switch from "../Switch";
 
 type HeaderProps = {
   start: string;
   end: string;
+  setSortKeys: Dispatch<SetStateAction<{ key: string; ascending: boolean }[]>>;
 };
-function Header({ start, end }: HeaderProps) {
+
+function Header({ start, end, setSortKeys }: HeaderProps) {
+  const [totalGamesPlayed, setTotalGamesPlayed] = useState(false);
+  const [totalOffNights, setTotalOffNights] = useState(false);
+
   const columns = [
     { label: "Team Name", id: "teamName" },
     ...getDayColumns(start, end),
-    { label: "Total GP", id: "totalGP" },
-    { label: "Total Off-Nights", id: "totalOffNights" },
+    {
+      label: (
+        <>
+          Total GP
+          <Switch
+            style={{ marginLeft: "2px" }}
+            checked={totalGamesPlayed}
+            onClick={() => {
+              setTotalGamesPlayed((prev) => !prev);
+              setSortKeys((prev) => {
+                const keys = [...prev];
+                keys.pop();
+                return [
+                  { key: "totalGamesPlayed", ascending: totalGamesPlayed },
+                  ...keys,
+                ];
+              });
+            }}
+          />
+        </>
+      ),
+      id: "totalGamesPlayed",
+    },
+    {
+      label: (
+        <>
+          Total Off-Nights
+          <Switch
+            style={{ marginLeft: "2px" }}
+            checked={totalOffNights}
+            onClick={() => {
+              setTotalOffNights((prev) => !prev);
+              setSortKeys((prev) => {
+                const keys = [...prev];
+                keys.pop();
+                return [
+                  { key: "totalOffNights", ascending: totalOffNights },
+                  ...keys,
+                ];
+              });
+            }}
+          />
+        </>
+      ),
+      id: "totalOffNights",
+    },
   ];
+
   return (
     <thead>
       <tr>
