@@ -37,10 +37,13 @@ function MatchUpRow(props: MatchUpRowData) {
       {DAYS.map((day) => {
         // @ts-ignore
         const cellData = props[day] as MatchUpCellData | undefined;
-        const hasMatchUp = cellData?.away || cellData?.home;
+        const hasMatchUp_ = cellData && hasMatchUp(cellData);
         return (
-          <td style={cellData?.offNight ? { backgroundColor: "#505050" } : {}}>
-            {hasMatchUp ? <MatchUpCell key={day} {...cellData} /> : "-"}
+          <td
+            key={day}
+            style={cellData?.offNight ? { backgroundColor: "#505050" } : {}}
+          >
+            {hasMatchUp_ ? <MatchUpCell key={day} {...cellData} /> : "-"}
           </td>
         );
       })}
@@ -55,13 +58,13 @@ function getTotalGamePlayed(matchUps: MatchUpRowData) {
   let num = 0;
   DAYS.forEach((day) => {
     // @ts-ignore
-    const matchUp = matchUps[day];
-    if (matchUp) num++;
+    const hasMatchUp_ = hasMatchUp(matchUps[day]);
+    if (hasMatchUp_) num++;
   });
   return num;
 }
 
-function MatchUpCell({ home, away, logo, score, offNight }: MatchUpCellData) {
+function MatchUpCell({ home, away, logo, score }: MatchUpCellData) {
   return (
     <div style={{ display: "flex" }}>
       <div
@@ -80,6 +83,16 @@ function MatchUpCell({ home, away, logo, score, offNight }: MatchUpCellData) {
       <img alt="Team logo" width={30} height={30} src={logo} />
     </div>
   );
+}
+
+/**
+ * Test if the match up exist.
+ * If a match up does not exist, then its home and away will both be false.
+ * @param matchUp A match up.
+ * @returns true if the match up exist, otherwise false.
+ */
+function hasMatchUp(matchUp: MatchUpCellData) {
+  return matchUp?.away || matchUp?.home;
 }
 
 export default MatchUpRow;
