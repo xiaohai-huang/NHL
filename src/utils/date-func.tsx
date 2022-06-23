@@ -32,5 +32,34 @@ export function dateDiffInDays(a: Date, b: Date) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
-// @ts-ignore
-window.dateDiffInDays = dateDiffInDays;
+// https://stackoverflow.com/questions/8381427/get-start-date-and-end-date-of-current-week-week-start-from-monday-and-end-with
+// return an array of date objects for start (monday)
+// and end (sunday) of week based on supplied
+// date object or current date
+export function startAndEndOfWeek(date?: Date): [string, string] {
+  // If no date object supplied, use current date
+  // Copy date so don't modify supplied date
+  var now = date ? new Date(date) : new Date();
+
+  // set time to some convenient value
+  now.setHours(0, 0, 0, 0);
+
+  // Get the previous Monday
+  var monday = new Date(now);
+  monday.setDate(monday.getDate() - monday.getDay() + 1);
+
+  // Get next Sunday
+  var sunday = new Date(now);
+  sunday.setDate(sunday.getDate() - sunday.getDay() + 7);
+
+  console.log([formatYYMMDD(monday), formatYYMMDD(sunday)]);
+
+  // Return array of date objects
+  return [formatYYMMDD(monday), formatYYMMDD(sunday)];
+}
+
+function formatYYMMDD(date: Date) {
+  const offset = date.getTimezoneOffset();
+  date = new Date(date.getTime() - offset * 60 * 1000);
+  return date.toISOString().split("T")[0];
+}

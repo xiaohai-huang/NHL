@@ -6,7 +6,8 @@ import TotalGamesPerDayRow from "./TotalGamesPerDayRow";
 
 import styles from "./GameGrid.module.css";
 import { getAllTeams, getMatchUps, Team } from "../../utils/NHL-API";
-import { addDays } from "../../utils/date-func";
+import { addDays, startAndEndOfWeek } from "../../utils/date-func";
+import { useSearchParams } from "react-router-dom";
 
 // const defaultData: MatchUpRowData[] = [
 //   {
@@ -107,12 +108,11 @@ function useMatchUps(start: string, end: string): [MatchUpRowData[], number[]] {
 }
 
 export default function GameGrid() {
-  // const [data, setData] = useState(() => [...defaultData]);
-  // startDate, endDate
-  const [dates, setDates] = useState<[string, string]>(() => [
-    "2022-06-13",
-    "2022-06-19",
-  ]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  // [startDate, endDate]
+  const [dates, setDates] = useState<[string, string]>(() =>
+    startAndEndOfWeek()
+  );
   const [matchUps, totalGamesPerDay] = useMatchUps(...dates);
   const offNights = useMemo(() => {
     const days: string[] = [];
@@ -130,12 +130,26 @@ export default function GameGrid() {
     if (action === "PREV") days = -7;
 
     let [start, end] = dates;
-
-    setDates([
-      addDays(new Date(start), days).toISOString().split("T")[0],
-      addDays(new Date(end), days).toISOString().split("T")[0],
-    ]);
+    const newStart = addDays(new Date(start), days).toISOString().split("T")[0];
+    const newEnd = addDays(new Date(end), days).toISOString().split("T")[0];
+    setSearchParams({ startDate: newStart, endDate: newEnd });
+    setDates([newStart, newEnd]);
   };
+
+  // Sync dates with URL search params
+  useEffect(() => {
+    let ignore = false;
+    const start = searchParams.get("startDate");
+    const end = searchParams.get("endDate");
+    if (start && end) {
+      if (!ignore) {
+        setDates([start, end]);
+      }
+    }
+    return () => {
+      ignore = true;
+    };
+  }, [searchParams]);
 
   return (
     <>
