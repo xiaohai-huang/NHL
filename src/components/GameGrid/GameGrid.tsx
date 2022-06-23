@@ -7,9 +7,12 @@ import TotalGamesPerDayRow from "./TotalGamesPerDayRow";
 
 import { addDays, startAndEndOfWeek } from "../../utils/date-func";
 import useTeams from "../../hooks/useTeams";
+import useTitle from "../../hooks/useTitle";
+
 import styles from "./GameGrid.module.css";
 
 export default function GameGrid() {
+  useTitle("FHFH | Game Grid");
   const [searchParams, setSearchParams] = useSearchParams();
   // [startDate, endDate]
   const [dates, setDates] = useState<[string, string]>(() =>
