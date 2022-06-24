@@ -11,6 +11,8 @@ import useTitle from "../../hooks/useTitle";
 
 import styles from "./GameGrid.module.css";
 
+export type Day = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+
 export default function GameGrid() {
   useTitle("FHFH | Game Grid");
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,6 +21,11 @@ export default function GameGrid() {
     startAndEndOfWeek()
   );
   const [teams, totalGamesPerDay] = useTeams(...dates);
+  const [excludedDays, setExcludedDays] = useState<Day[]>([
+    "Fri",
+    "Mon",
+    "Wed",
+  ]);
   const [sortKeys, setSortKeys] = useState<
     { key: string; ascending: boolean }[]
   >([]);
@@ -74,7 +81,10 @@ export default function GameGrid() {
         <Header start={dates[0]} end={dates[1]} setSortKeys={setSortKeys} />
         <tbody>
           {/* Total Games Per Day */}
-          <TotalGamesPerDayRow games={totalGamesPerDay} />
+          <TotalGamesPerDayRow
+            games={totalGamesPerDay}
+            excludedDays={excludedDays}
+          />
           {/* Teams */}
           {sortedTeams.map((row) => {
             return <TeamRow key={row.teamName} {...row} />;

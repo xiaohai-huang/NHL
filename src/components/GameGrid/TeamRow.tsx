@@ -34,7 +34,7 @@ export type TeamRowData = {
   [key: string]: any;
 };
 
-export const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+export const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
 
 function TeamRow(props: TeamRowData) {
   return (

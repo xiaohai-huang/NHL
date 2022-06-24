@@ -1,10 +1,17 @@
+import { Day } from "./GameGrid";
+import { DAYS } from "./TeamRow";
+
 import styles from "./GameGrid.module.css";
 
 type TotalGamesPerDayRowProps = {
   games: number[];
+  excludedDays: Day[];
 };
 
-function TotalGamesPerDayRow({ games }: TotalGamesPerDayRowProps) {
+function TotalGamesPerDayRow({
+  games,
+  excludedDays,
+}: TotalGamesPerDayRowProps) {
   return (
     <tr>
       <td>Total Games Per Day</td>
@@ -16,7 +23,7 @@ function TotalGamesPerDayRow({ games }: TotalGamesPerDayRowProps) {
       {/* Total GP */}
       <td>{games.reduce((prev, current) => prev + current, 0)}</td>
       {/* Total Off-Nights */}
-      <td>{calcTotalOffNights(games)}</td>
+      <td>{calcTotalOffNights(games, excludedDays)}</td>
     </tr>
   );
 }
@@ -26,10 +33,13 @@ function TotalGamesPerDayRow({ games }: TotalGamesPerDayRowProps) {
  * that week on a day where <=8 games are occurring.
  * @param games
  */
-function calcTotalOffNights(games: number[]) {
+function calcTotalOffNights(games: number[], excludedDays: Day[]) {
   let total = 0;
-  games.forEach((gamesPlayed) => {
-    if (gamesPlayed <= 8) {
+  // ["Fri","Tue"] => [4, 1]
+  const excludedDaysIdx = excludedDays.map((day) => DAYS.indexOf(day));
+  games.forEach((gamesPlayed, i) => {
+    const excluded = excludedDaysIdx.includes(i);
+    if (!excluded && gamesPlayed <= 8) {
       total++;
     }
   });
