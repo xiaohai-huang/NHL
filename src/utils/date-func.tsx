@@ -1,10 +1,12 @@
+import { Day } from "../components/GameGrid/GameGrid";
+
 /**
  *
  * @param date An instance of Date
  * @returns Mon, Tue
  */
 export function getDayStr(date: Date) {
-  return date.toLocaleString("en-us", { weekday: "short" });
+  return date.toLocaleString("en-us", { weekday: "short" }) as Day;
 }
 
 export function addDays(date: Date, days: number) {

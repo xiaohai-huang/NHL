@@ -7,20 +7,30 @@ import {
   getDayStr,
 } from "../../utils/date-func";
 import Switch from "../Switch";
+import Toggle from "../Toggle/Toggle";
+import { Day } from "./GameGrid";
 
 type HeaderProps = {
   start: string;
   end: string;
   setSortKeys: Dispatch<SetStateAction<{ key: string; ascending: boolean }[]>>;
+  excludedDays: Day[];
+  setExcludedDays: React.Dispatch<React.SetStateAction<Day[]>>;
 };
 
-function Header({ start, end, setSortKeys }: HeaderProps) {
+function Header({
+  start,
+  end,
+  setSortKeys,
+  excludedDays,
+  setExcludedDays,
+}: HeaderProps) {
   const [totalGamesPlayed, setTotalGamesPlayed] = useState(false);
   const [totalOffNights, setTotalOffNights] = useState(false);
 
   const columns = [
     { label: "Team Name", id: "teamName" },
-    ...getDayColumns(start, end),
+    ...getDayColumns(start, end, excludedDays, setExcludedDays),
     {
       label: (
         <>
@@ -89,7 +99,12 @@ export function parseDateStr(dateStr: string) {
   return new Date(Number(year), Number(month) - 1, Number(day));
 }
 
-function getDayColumns(start: string, end: string) {
+function getDayColumns(
+  start: string,
+  end: string,
+  excludedDays: Day[],
+  setExcludedDays: React.Dispatch<React.SetStateAction<Day[]>>
+) {
   // "2022-06-20", "2022-06-20"
   const startDate = parseDateStr(start);
   const endDate = parseDateStr(end);
@@ -98,11 +113,35 @@ function getDayColumns(start: string, end: string) {
   const columns = [] as { label: JSX.Element | string; id: string }[];
   let current = startDate;
   for (let i = 0; i <= days; i++) {
+    const day = getDayStr(current);
     columns.push({
       label: (
         <>
-          {getDayStr(current)}
-          <br /> {formatDate(current)}
+          {day}
+          <br />
+          <p
+            style={{
+              whiteSpace: "nowrap",
+              fontSize: "14px",
+              marginBottom: "3px",
+            }}
+          >
+            {formatDate(current)}
+          </p>
+          <Toggle
+            checked={excludedDays.includes(day)}
+            onChange={() => {
+              setExcludedDays((prev) => {
+                const set = new Set(prev);
+                if (set.has(day)) {
+                  set.delete(day);
+                } else {
+                  set.add(day);
+                }
+                return Array.from(set);
+              });
+            }}
+          />
         </>
       ),
       id: getDayStr(current),

@@ -44,7 +44,7 @@ export default function useTeams(
           }
         });
 
-        // add off nights to each day for shading light color
+        // add off nights to each day for shading light color for padded teams
         const offNights = getOffNights(totalGamesPerDay);
         paddedTeams.forEach((row) => {
           offNights.forEach((day) => {

@@ -1,3 +1,4 @@
+import { Day } from "../components/GameGrid/GameGrid";
 import { parseDateStr } from "../components/GameGrid/Header";
 import {
   DAYS,
@@ -172,14 +173,18 @@ function getOffNights(totalGamesPerDay: number[]) {
  * @param matchUp A match up.
  * @returns true if the match up exist, otherwise false.
  */
-function hasMatchUp(matchUp: MatchUpCellData) {
+function hasMatchUp(matchUp: MatchUpCellData | undefined) {
   return matchUp?.away || matchUp?.home;
 }
 
-function getTotalGamePlayed(matchUps: TeamRowData) {
+export function getTotalGamePlayed(
+  matchUps: TeamRowData,
+  excludedDays: Day[] = []
+) {
   let num = 0;
   DAYS.forEach((day) => {
-    // @ts-ignore
+    if (excludedDays.includes(day)) return;
+
     const hasMatchUp_ = hasMatchUp(matchUps[day]);
     if (hasMatchUp_) num++;
   });
@@ -191,13 +196,17 @@ function getTotalGamePlayed(matchUps: TeamRowData) {
  * @param matchUps All match ups. Monday ~ Sunday
  * @returns Total Off Nights
  */
-function calcTotalOffNights(matchUps: TeamRowData) {
+export function calcTotalOffNights(
+  matchUps: TeamRowData,
+  excludedDays: Day[] = []
+) {
   let num = 0;
   DAYS.forEach((day) => {
-    // @ts-ignore
-    const matchUp: MatchUpCellData = matchUps[day];
+    if (excludedDays.includes(day)) return;
+
+    const matchUp = matchUps[day];
     const hasMatchUp_ = hasMatchUp(matchUp);
-    if (hasMatchUp_ && matchUp.offNight) num++;
+    if (hasMatchUp_ && matchUp?.offNight) num++;
   });
   return num;
 }

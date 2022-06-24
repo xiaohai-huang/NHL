@@ -6,6 +6,7 @@ import TeamRow from "./TeamRow";
 import TotalGamesPerDayRow from "./TotalGamesPerDayRow";
 
 import { addDays, startAndEndOfWeek } from "../../utils/date-func";
+import { calcTotalOffNights, getTotalGamePlayed } from "../../utils/NHL-API";
 import useTeams from "../../hooks/useTeams";
 import useTitle from "../../hooks/useTitle";
 
@@ -21,17 +22,29 @@ export default function GameGrid() {
     startAndEndOfWeek()
   );
   const [teams, totalGamesPerDay] = useTeams(...dates);
-  const [excludedDays, setExcludedDays] = useState<Day[]>([
-    "Fri",
-    "Mon",
-    "Wed",
-  ]);
+  const [excludedDays, setExcludedDays] = useState<Day[]>([]);
   const [sortKeys, setSortKeys] = useState<
     { key: string; ascending: boolean }[]
   >([]);
 
+  // calculate new total GP and total off-nights based on excluded days.
+  const filteredColumns = useMemo(() => {
+    const copy = [...teams];
+    copy.forEach((row) => {
+      // add Total GP for each team
+      const totalGamesPlayed = getTotalGamePlayed(row, excludedDays);
+
+      // add Total Off-Nights
+      const totalOffNights = calcTotalOffNights(row, excludedDays);
+
+      row.totalGamesPlayed = totalGamesPlayed;
+      row.totalOffNights = totalOffNights;
+    });
+    return copy;
+  }, [excludedDays, teams]);
+
   const sortedTeams = useMemo(() => {
-    return [...teams].sort((a, b) => {
+    return [...filteredColumns].sort((a, b) => {
       for (let i = 0; i < sortKeys.length; i++) {
         const { key, ascending } = sortKeys[i];
         if (a[key] - b[key] !== 0) {
@@ -40,7 +53,7 @@ export default function GameGrid() {
       }
       return a.teamName.localeCompare(b.teamName);
     });
-  }, [sortKeys, teams]);
+  }, [sortKeys, filteredColumns]);
 
   // PREV, NEXT button click
   const handleClick = (action: string) => () => {
@@ -78,7 +91,13 @@ export default function GameGrid() {
         Next
       </button>
       <table className={styles.scheduleGrid}>
-        <Header start={dates[0]} end={dates[1]} setSortKeys={setSortKeys} />
+        <Header
+          start={dates[0]}
+          end={dates[1]}
+          setSortKeys={setSortKeys}
+          excludedDays={excludedDays}
+          setExcludedDays={setExcludedDays}
+        />
         <tbody>
           {/* Total Games Per Day */}
           <TotalGamesPerDayRow
