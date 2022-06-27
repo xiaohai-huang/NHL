@@ -64,7 +64,17 @@ function TeamRow(props: TeamRowData) {
   );
 }
 
-function MatchUpCell({ win, loss, logo, score }: MatchUpCellData) {
+function MatchUpCell({ home, away, win, loss, logo, score }: MatchUpCellData) {
+  let text = "";
+  // game with result
+  if (win || loss) {
+    text = win ? "WIN" : "LOSS";
+  }
+  // game without result, display home/away
+  else {
+    text = home ? "HOME" : "AWAY";
+  }
+
   return (
     <div style={{ display: "flex" }}>
       <div
@@ -74,10 +84,7 @@ function MatchUpCell({ win, loss, logo, score }: MatchUpCellData) {
           marginRight: "4px",
         }}
       >
-        <span className={styles.homeAway}>
-          {win && "WIN"}
-          {loss && "LOSS"}
-        </span>
+        <span className={styles.homeAway}>{text}</span>
         <p className={styles.score}>{score}</p>
       </div>
       <img alt="Team logo" width={30} height={30} src={logo} />
