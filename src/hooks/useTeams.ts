@@ -5,7 +5,8 @@ import { getAllTeams, getTeams, Team } from "../utils/NHL-API";
 export default function useTeams(
   start: string,
   end: string
-): [TeamRowData[], number[]] {
+): [TeamRowData[], number[], boolean] {
+  const [loading, setLoading] = useState(false);
   const [teams, setTeams] = useState<TeamRowData[]>([]);
   const [totalGamesPerDay, setTotalGamesPerDay] = useState<number[]>([]);
   const [allTeams, setAllTeams] = useState<Team[]>([]);
@@ -27,6 +28,7 @@ export default function useTeams(
 
   useEffect(() => {
     let ignore = false;
+    setLoading(true);
     (async () => {
       const [teams, totalGamesPerDay] = await getTeams(start, end);
       if (!ignore) {
@@ -56,15 +58,17 @@ export default function useTeams(
         // paddedTeams.sort((a, b) => a.teamName.localeCompare(b.teamName));
         setTeams(paddedTeams);
         setTotalGamesPerDay(totalGamesPerDay);
+        setLoading(false);
       }
     })();
 
     return () => {
       ignore = true;
+      setLoading(false);
     };
   }, [start, end, allTeams]);
 
-  return [teams, totalGamesPerDay];
+  return [teams, totalGamesPerDay, loading];
 }
 
 function getOffNights(totalGamesPerDay: number[]) {

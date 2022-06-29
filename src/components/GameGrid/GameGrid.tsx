@@ -21,7 +21,7 @@ export default function GameGrid() {
   const [dates, setDates] = useState<[string, string]>(() =>
     startAndEndOfWeek()
   );
-  const [teams, totalGamesPerDay] = useTeams(...dates);
+  const [teams, totalGamesPerDay, loading] = useTeams(...dates);
   const [excludedDays, setExcludedDays] = useState<Day[]>([]);
   const [sortKeys, setSortKeys] = useState<
     { key: string; ascending: boolean }[]
@@ -90,6 +90,7 @@ export default function GameGrid() {
       <button className={styles.dateButtonNext} onClick={handleClick("NEXT")}>
         Next
       </button>
+      {loading && <p style={{ color: "white" }}>loading...</p>}
       <table className={styles.scheduleGrid}>
         <Header
           start={dates[0]}
