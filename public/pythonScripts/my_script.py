@@ -13,8 +13,8 @@ async def fetch_data():
     end_season_id = 20212022
     query = 'isAggregate=false&isGame=false&sort=[{"property":"points","direction":"DESC"},{"property":"wins","direction":"DESC"},{"property":"teamId","direction":"ASC"}]&start=0&limit=50&factCayenneExp=gamesPlayed>=1&cayenneExp=gameTypeId=2 and '+ \
             f'seasonId<={end_season_id} and seasonId>={start_season_id}'
-    proxy_url = "https://cors-anywhere.herokuapp.com/"
-    url = f"https://api.nhle.com/stats/rest/en/team/summary?{query}"
+    proxy_url = "https://xiaohai-huang.net/"
+    url = f"{proxy_url}https://api.nhle.com/stats/rest/en/team/summary?{query}"
 
 
     async def request():
