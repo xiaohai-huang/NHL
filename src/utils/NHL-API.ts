@@ -83,53 +83,63 @@ export async function getTeams(
     totalGamesPerDay.push(numGames);
   });
 
-  const temp: { [day: string]: MatchUpCellData } = {};
   // console.log(games);
 
   // init python env
   await initGameScoreEnvPromise;
+  const temp = new Map<string, { [day: string]: MatchUpCellData }>();
 
+  // extract two teams from each game
+  // [{ranger:{Mon:{}}}, {newYork:{Mon:{}}}], [colvance:{M}]
   const promises = games.map(async (game) => {
     const day = getDayStr(parseDateStr(game.date));
-
     const { home, away } = game.teams;
-    temp[home.team.name] = {
-      ...temp[home.team.name],
-      [day]: {
-        home: true,
-        away: false,
-        logo: getTeamLogo(away.team.name),
-        win: home.score > away.score,
-        loss: home.score < away.score,
-        score: await calcGameScore(home.team.name, away.team.name),
+    const dat = [
+      {
+        [home.team.name]: {
+          [day]: {
+            home: true,
+            away: false,
+            logo: getTeamLogo(away.team.name),
+            win: home.score > away.score,
+            loss: home.score < away.score,
+            score: await calcGameScore(home.team.name, away.team.name),
+          } as MatchUpCellData,
+        },
       },
-    };
-
-    temp[away.team.name] = {
-      ...temp[away.team.name],
-      [day]: {
-        home: false,
-        away: true,
-        logo: getTeamLogo(home.team.name),
-        win: away.score > home.score,
-        loss: away.score < home.score,
-        score: await calcGameScore(away.team.name, home.team.name),
+      {
+        [away.team.name]: {
+          [day]: {
+            home: false,
+            away: true,
+            logo: getTeamLogo(home.team.name),
+            win: away.score > home.score,
+            loss: away.score < home.score,
+            score: await calcGameScore(away.team.name, home.team.name),
+          } as MatchUpCellData,
+        },
       },
-    };
+    ];
+    return dat;
+  });
+  // [{ranger:{Mon:{}}}, {newYork:{Mon:{}}}], [colvance:{M}]
+  // { ranger:{Mon:{}, Tue:{} }  }
+  const r = (await Promise.all(promises)).flat();
+  r.forEach((el) => {
+    const teamName = Object.keys(el)[0];
+    temp.set(teamName, { ...temp.get(teamName), ...el[teamName] });
   });
 
-  await Promise.all(promises);
-  // console.log(temp);
   const teams: TeamRowData[] = [];
 
-  Object.entries(temp).forEach(([teamName, games]) => {
+  for (const [teamName, games] of temp) {
     teams.push({
       teamName: teamName,
       ...games,
       totalGamesPlayed: 0,
       totalOffNights: 0,
     });
-  });
+  }
 
   const offNights = getOffNights(totalGamesPerDay);
   teams.forEach((row) => {
