@@ -85,11 +85,19 @@ function MatchUpCell({ home, away, win, loss, logo, score }: MatchUpCellData) {
         }}
       >
         <span className={styles.homeAway}>{text}</span>
-        <p className={styles.score}>{score.toFixed(2)}</p>
+        <p className={styles.score}>{formatScore(score)}</p>
       </div>
       <img alt="Team logo" width={30} height={30} src={logo} />
     </div>
   );
+}
+
+function formatScore(score: number) {
+  var s = Number(score).toLocaleString(undefined, {
+    style: "percent",
+    minimumFractionDigits: 2,
+  });
+  return s;
 }
 
 /**
