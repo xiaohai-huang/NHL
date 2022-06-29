@@ -5,6 +5,7 @@ import {
   MatchUpCellData,
   TeamRowData,
 } from "../components/GameGrid/TeamRow";
+import calcGameScore, { initGameScoreEnv } from "./calcGameScore";
 import { getDayStr } from "./date-func";
 
 const URL = `https://statsapi.web.nhl.com/api/v1/`;
@@ -30,14 +31,16 @@ type Game = {
   teams: {
     home: {
       team: Team;
-      score: number;
+      score: number | string;
     };
     away: {
       team: Team;
-      score: number;
+      score: number | string;
     };
   };
 };
+
+const initGameScoreEnvPromise = initGameScoreEnv();
 /**
  * API: schedule?startDate=yyyy-mm-dd&endDate=yyyy-mm-dd
  * @param start Date string. e.g., 2020-01-13
@@ -83,7 +86,10 @@ export async function getTeams(
   const temp: { [day: string]: MatchUpCellData } = {};
   // console.log(games);
 
-  games.forEach((game) => {
+  // init python env
+  await initGameScoreEnvPromise;
+
+  const promises = games.map(async (game) => {
     const day = getDayStr(parseDateStr(game.date));
 
     const { home, away } = game.teams;
@@ -95,7 +101,7 @@ export async function getTeams(
         logo: getTeamLogo(away.team.name),
         win: home.score > away.score,
         loss: home.score < away.score,
-        score: `${home.score}-${away.score}`,
+        score: await calcGameScore(home.team.name, away.team.name),
       },
     };
 
@@ -107,10 +113,12 @@ export async function getTeams(
         logo: getTeamLogo(home.team.name),
         win: away.score > home.score,
         loss: away.score < home.score,
-        score: `${away.score}-${home.score}`,
+        score: await calcGameScore(away.team.name, home.team.name),
       },
     };
   });
+
+  await Promise.all(promises);
   // console.log(temp);
   const teams: TeamRowData[] = [];
 

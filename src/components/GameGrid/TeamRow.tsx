@@ -10,9 +10,9 @@ export type MatchUpCellData = {
   win: boolean;
   loss: boolean;
   /**
-   * e.g., "2-6"
+   * The game score.
    */
-  score: string;
+  score: number;
   /**
    * if the total # of games played that day was <=8
    * to signify what I call an “Off-Night”
@@ -85,7 +85,7 @@ function MatchUpCell({ home, away, win, loss, logo, score }: MatchUpCellData) {
         }}
       >
         <span className={styles.homeAway}>{text}</span>
-        <p className={styles.score}>{score}</p>
+        <p className={styles.score}>{score.toFixed(2)}</p>
       </div>
       <img alt="Team logo" width={30} height={30} src={logo} />
     </div>
