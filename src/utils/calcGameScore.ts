@@ -33,3 +33,13 @@ export default async function calcGameScore(
 export function handleBackToBackGameScore(gameScores: number | null[]) {
   return [];
 }
+/**
+ * GameScore would have to be adjusted to be within a -5 to 5 range, with 50% being 0.
+  - 75% winOdds = 2.5
+  - 25% winOdds = -2.5
+ * @param score A floating point number between 0 and 1
+ * @returns 
+ */
+export function formatGameScore(score: number) {
+  return (score * 10 - 5).toFixed(2);
+}
