@@ -8,6 +8,7 @@ export type MatchUpCellData = {
    * URL, the opponent's team logo.
    */
   logo: string;
+  opponentName: string;
   win: boolean;
   loss: boolean;
   /**
@@ -65,7 +66,15 @@ function TeamRow(props: TeamRowData) {
   );
 }
 
-function MatchUpCell({ home, away, win, loss, logo, score }: MatchUpCellData) {
+function MatchUpCell({
+  home,
+  away,
+  win,
+  loss,
+  logo,
+  opponentName,
+  score,
+}: MatchUpCellData) {
   let text = "";
   // game with result
   if (win || loss) {
@@ -88,7 +97,13 @@ function MatchUpCell({ home, away, win, loss, logo, score }: MatchUpCellData) {
         <span className={styles.homeAway}>{text}</span>
         <p className={styles.score}>{formatGameScore(score)}</p>
       </div>
-      <img alt="Team logo" width={30} height={30} src={logo} />
+      <img
+        alt={`${opponentName} logo`}
+        width={30}
+        height={30}
+        src={logo}
+        title={opponentName}
+      />
     </div>
   );
 }
