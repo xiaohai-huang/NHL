@@ -1,3 +1,5 @@
+import { formatGameScore } from "../../utils/calcGameScore";
+import { formatWeekScore } from "../../utils/calcWeekScore";
 import styles from "./GameGrid.module.css";
 
 export type MatchUpCellData = {
@@ -7,6 +9,7 @@ export type MatchUpCellData = {
    * URL, the opponent's team logo.
    */
   logo: string;
+  opponentName: string;
   win: boolean;
   loss: boolean;
   /**
@@ -31,6 +34,7 @@ export type TeamRowData = {
   Sun?: MatchUpCellData;
   totalGamesPlayed: number;
   totalOffNights: number;
+  weekScore: number;
   [key: string]: any;
 };
 
@@ -60,11 +64,23 @@ function TeamRow(props: TeamRowData) {
       <td>{props.totalGamesPlayed}</td>
       {/* Total Off-Nights */}
       <td>{props.totalOffNights}</td>
+      {/* Week Score */}
+      <td>
+        {props.weekScore === -100 ? "-" : formatWeekScore(props.weekScore)}
+      </td>
     </tr>
   );
 }
 
-function MatchUpCell({ home, away, win, loss, logo, score }: MatchUpCellData) {
+function MatchUpCell({
+  home,
+  away,
+  win,
+  loss,
+  logo,
+  opponentName,
+  score,
+}: MatchUpCellData) {
   let text = "";
   // game with result
   if (win || loss) {
@@ -85,19 +101,17 @@ function MatchUpCell({ home, away, win, loss, logo, score }: MatchUpCellData) {
         }}
       >
         <span className={styles.homeAway}>{text}</span>
-        <p className={styles.score}>{formatScore(score)}</p>
+        <p className={styles.score}>{formatGameScore(score)}</p>
       </div>
-      <img alt="Team logo" width={30} height={30} src={logo} />
+      <img
+        alt={`${opponentName} logo`}
+        width={30}
+        height={30}
+        src={logo}
+        title={opponentName}
+      />
     </div>
   );
-}
-
-function formatScore(score: number) {
-  var s = Number(score).toLocaleString(undefined, {
-    style: "percent",
-    minimumFractionDigits: 2,
-  });
-  return s;
 }
 
 /**

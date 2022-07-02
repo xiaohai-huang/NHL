@@ -27,6 +27,7 @@ function Header({
 }: HeaderProps) {
   const [totalGamesPlayed, setTotalGamesPlayed] = useState(false);
   const [totalOffNights, setTotalOffNights] = useState(false);
+  const [weekScore, setWeekScore] = useState(false);
 
   const columns = [
     { label: "Team Name", id: "teamName" },
@@ -76,6 +77,26 @@ function Header({
         </>
       ),
       id: "totalOffNights",
+    },
+    {
+      label: (
+        <>
+          Week Score
+          <Switch
+            style={{ marginLeft: "2px" }}
+            checked={totalOffNights}
+            onClick={() => {
+              setWeekScore((prev) => !prev);
+              setSortKeys((prev) => {
+                const keys = [...prev];
+                keys.pop();
+                return [{ key: "weekScore", ascending: weekScore }, ...keys];
+              });
+            }}
+          />
+        </>
+      ),
+      id: "weekScore",
     },
   ];
 

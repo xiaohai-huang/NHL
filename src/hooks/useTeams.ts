@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DAYS, TeamRowData } from "../components/GameGrid/TeamRow";
+import { adjustBackToBackGames } from "../utils/calcGameScore";
 import { getAllTeams, getTeams, Team } from "../utils/NHL-API";
 
 export default function useTeams(
@@ -42,6 +43,7 @@ export default function useTeams(
               teamName: team.name,
               totalGamesPlayed: 0,
               totalOffNights: 0,
+              weekScore: -100, // unknown at this stage
             });
           }
         });
@@ -55,7 +57,9 @@ export default function useTeams(
           });
         });
 
-        // paddedTeams.sort((a, b) => a.teamName.localeCompare(b.teamName));
+        // adjust GameScores based on back-to-back plays
+        adjustBackToBackGames(paddedTeams);
+
         setTeams(paddedTeams);
         setTotalGamesPerDay(totalGamesPerDay);
         setLoading(false);

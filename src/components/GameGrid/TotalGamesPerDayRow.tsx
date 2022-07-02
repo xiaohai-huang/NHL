@@ -24,6 +24,7 @@ function TotalGamesPerDayRow({
       <td>{calcTotalGP(games, excludedDays)}</td>
       {/* Total Off-Nights */}
       <td>{calcTotalOffNights(games, excludedDays)}</td>
+      <td>-</td>
     </tr>
   );
 }
@@ -34,7 +35,7 @@ function TotalGamesPerDayRow({
  * @param excludedDays The days to be ignored.
  * @returns The number of games played in the week.
  */
-function calcTotalGP(games: number[], excludedDays: Day[]) {
+export function calcTotalGP(games: number[], excludedDays: Day[]) {
   let total = 0;
   // ["Fri","Tue"] => [4, 1]
   const excludedDaysIdx = excludedDays.map((day) => DAYS.indexOf(day));
