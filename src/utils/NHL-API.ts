@@ -140,6 +140,7 @@ export async function getTeams(
       ...games,
       totalGamesPlayed: 0,
       totalOffNights: 0,
+      weekScore: -100, // unknown at this stage
     });
   }
 

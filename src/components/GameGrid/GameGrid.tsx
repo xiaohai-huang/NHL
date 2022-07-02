@@ -3,12 +3,14 @@ import { useSearchParams } from "react-router-dom";
 
 import Header from "./Header";
 import TeamRow from "./TeamRow";
-import TotalGamesPerDayRow from "./TotalGamesPerDayRow";
+import TotalGamesPerDayRow, { calcTotalGP } from "./TotalGamesPerDayRow";
 
 import { addDays, startAndEndOfWeek } from "../../utils/date-func";
 import { calcTotalOffNights, getTotalGamePlayed } from "../../utils/NHL-API";
 import useTeams from "../../hooks/useTeams";
 import useTitle from "../../hooks/useTitle";
+import calcWeekScore from "../../utils/calcWeekScore";
+import { convertTeamRowToGameScores } from "../../utils/calcGameScore";
 
 import styles from "./GameGrid.module.css";
 
@@ -30,6 +32,7 @@ export default function GameGrid() {
   // calculate new total GP and total off-nights based on excluded days.
   const filteredColumns = useMemo(() => {
     const copy = [...teams];
+    const totalGP = calcTotalGP(totalGamesPerDay, excludedDays);
     copy.forEach((row) => {
       // add Total GP for each team
       const totalGamesPlayed = getTotalGamePlayed(row, excludedDays);
@@ -39,9 +42,18 @@ export default function GameGrid() {
 
       row.totalGamesPlayed = totalGamesPlayed;
       row.totalOffNights = totalOffNights;
+
+      // add Week Score
+      const gameScores = convertTeamRowToGameScores(row);
+      row.weekScore = calcWeekScore(
+        gameScores,
+        totalOffNights,
+        totalGP,
+        totalGamesPlayed
+      );
     });
     return copy;
-  }, [excludedDays, teams]);
+  }, [excludedDays, teams, totalGamesPerDay]);
 
   const sortedTeams = useMemo(() => {
     return [...filteredColumns].sort((a, b) => {

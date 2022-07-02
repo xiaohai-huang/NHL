@@ -1,4 +1,5 @@
 import { formatGameScore } from "../../utils/calcGameScore";
+import { formatWeekScore } from "../../utils/calcWeekScore";
 import styles from "./GameGrid.module.css";
 
 export type MatchUpCellData = {
@@ -33,6 +34,7 @@ export type TeamRowData = {
   Sun?: MatchUpCellData;
   totalGamesPlayed: number;
   totalOffNights: number;
+  weekScore: number;
   [key: string]: any;
 };
 
@@ -62,6 +64,10 @@ function TeamRow(props: TeamRowData) {
       <td>{props.totalGamesPlayed}</td>
       {/* Total Off-Nights */}
       <td>{props.totalOffNights}</td>
+      {/* Week Score */}
+      <td>
+        {props.weekScore === -100 ? "-" : formatWeekScore(props.weekScore)}
+      </td>
     </tr>
   );
 }
