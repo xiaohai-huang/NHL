@@ -1,6 +1,6 @@
 import { adjustBackToBackGames, formatWinOdds, isBackToBack } from "./calcWinOdds";
 
-it('format game score', () => {
+it('format winOdds', () => {
     expect(formatWinOdds(0.75)).toEqual("2.50");
     expect(formatWinOdds(0.25)).toEqual("-2.50");
 });
@@ -53,7 +53,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Colorado Avalanche",
                     "win": true,
                     "loss": false,
-                    "score": 0.4683193844172209,
+                    "winOdds": 0.4683193844172209,
                     "offNight": true
                 },
                 "Wed": {
@@ -63,7 +63,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Colorado Avalanche",
                     "win": false,
                     "loss": true,
-                    "score": 0.4683193844172209,
+                    "winOdds": 0.4683193844172209,
                     "offNight": true
                 },
                 "Fri": {
@@ -73,7 +73,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Colorado Avalanche",
                     "win": true,
                     "loss": false,
-                    "score": 0.4683193844172209,
+                    "winOdds": 0.4683193844172209,
                     "offNight": true
                 },
                 "Sun": {
@@ -83,7 +83,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Colorado Avalanche",
                     "win": false,
                     "loss": true,
-                    "score": 0.4683193844172209,
+                    "winOdds": 0.4683193844172209,
                     "offNight": true
                 },
                 "totalGamesPlayed": 4,
@@ -107,7 +107,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Tampa Bay Lightning",
                     "win": false,
                     "loss": true,
-                    "score": 0.5275474282423047,
+                    "winOdds": 0.5275474282423047,
                     "offNight": true
                 },
                 "Wed": {
@@ -117,7 +117,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Tampa Bay Lightning",
                     "win": true,
                     "loss": false,
-                    "score": 0.5275474282423047,
+                    "winOdds": 0.5275474282423047,
                     "offNight": true
                 },
                 "Fri": {
@@ -127,7 +127,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Tampa Bay Lightning",
                     "win": false,
                     "loss": true,
-                    "score": 0.5275474282423047,
+                    "winOdds": 0.5275474282423047,
                     "offNight": true
                 },
                 "Sun": {
@@ -137,7 +137,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Tampa Bay Lightning",
                     "win": true,
                     "loss": false,
-                    "score": 0.5275474282423047,
+                    "winOdds": 0.5275474282423047,
                     "offNight": true
                 },
                 "totalGamesPlayed": 4,
@@ -950,7 +950,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Vancouver Canucks",
                     "win": false,
                     "loss": true,
-                    "score": 0.3420747153571749
+                    "winOdds": 0.3420747153571749
                 },
                 "Wed": {
                     "home": true,
@@ -959,7 +959,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Los Angeles Kings",
                     "win": false,
                     "loss": true,
-                    "score": 0.27381464601843486,
+                    "winOdds": 0.27381464601843486,
                     "offNight": true
                 },
                 "Fri": {
@@ -969,7 +969,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "San Jose Sharks",
                     "win": true,
                     "loss": false,
-                    "score": 0.465235081403653
+                    "winOdds": 0.465235081403653
                 },
                 "Sun": {
                     "home": false,
@@ -978,7 +978,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Winnipeg Jets",
                     "win": false,
                     "loss": true,
-                    "score": 0.3709074291312576,
+                    "winOdds": 0.3709074291312576,
                     "offNight": true
                 },
                 "totalGamesPlayed": 4,
@@ -999,7 +999,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Seattle Kraken",
                     "win": true,
                     "loss": false,
-                    "score": 0.6329889986809478,
+                    "winOdds": 0.6329889986809478,
                     "offNight": true
                 },
                 "Thu": {
@@ -1009,7 +1009,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Vancouver Canucks",
                     "win": false,
                     "loss": true,
-                    "score": 0.35785690345019416
+                    "winOdds": 0.35785690345019416
                 },
                 "totalGamesPlayed": 2,
                 "totalOffNights": 1,
@@ -1035,7 +1035,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Vancouver Canucks",
                     "win": false,
                     "loss": true,
-                    "score": 0.3420747153571749
+                    "winOdds": 0.3420747153571749
                 },
                 "Wed": {
                     "home": true,
@@ -1044,7 +1044,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Los Angeles Kings",
                     "win": false,
                     "loss": true,
-                    "score": 0.27381464601843486 * dilutedFactor,
+                    "winOdds": 0.27381464601843486 * dilutedFactor,
                     "offNight": true
                 },
                 "Fri": {
@@ -1054,7 +1054,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "San Jose Sharks",
                     "win": true,
                     "loss": false,
-                    "score": 0.465235081403653
+                    "winOdds": 0.465235081403653
                 },
                 "Sun": {
                     "home": false,
@@ -1063,7 +1063,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Winnipeg Jets",
                     "win": false,
                     "loss": true,
-                    "score": 0.3709074291312576,
+                    "winOdds": 0.3709074291312576,
                     "offNight": true
                 },
                 "totalGamesPlayed": 4,
@@ -1084,7 +1084,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Seattle Kraken",
                     "win": true,
                     "loss": false,
-                    "score": 0.6329889986809478,
+                    "winOdds": 0.6329889986809478,
                     "offNight": true
                 },
                 "Thu": {
@@ -1094,7 +1094,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Vancouver Canucks",
                     "win": false,
                     "loss": true,
-                    "score": 0.35785690345019416 * dilutedFactor
+                    "winOdds": 0.35785690345019416 * dilutedFactor
                 },
                 "totalGamesPlayed": 2,
                 "totalOffNights": 1,
@@ -1124,7 +1124,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Minnesota Wild",
                     "win": true,
                     "loss": false,
-                    "score": 0.21957800857083876
+                    "winOdds": 0.21957800857083876
                 },
                 "Wed": {
                     "home": false,
@@ -1133,7 +1133,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Dallas Stars",
                     "win": true,
                     "loss": false,
-                    "score": 0.33625388899287834,
+                    "winOdds": 0.33625388899287834,
                     "offNight": true
                 },
                 "Fri": {
@@ -1143,7 +1143,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Nashville Predators",
                     "win": true,
                     "loss": false,
-                    "score": 0.290253598668656
+                    "winOdds": 0.290253598668656
                 },
                 "totalGamesPlayed": 3,
                 "totalOffNights": 1,
@@ -1166,7 +1166,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Vegas Golden Knights",
                     "win": true,
                     "loss": false,
-                    "score": 0.44467090564095196
+                    "winOdds": 0.44467090564095196
                 },
                 "Wed": {
                     "home": true,
@@ -1175,7 +1175,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Arizona Coyotes",
                     "win": false,
                     "loss": true,
-                    "score": 0.6605566804220405,
+                    "winOdds": 0.6605566804220405,
                     "offNight": true
                 },
                 "Fri": {
@@ -1185,7 +1185,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Anaheim Ducks",
                     "win": true,
                     "loss": false,
-                    "score": 0.548777006107547
+                    "winOdds": 0.548777006107547
                 },
                 "totalGamesPlayed": 3,
                 "totalOffNights": 1,
@@ -1211,7 +1211,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Minnesota Wild",
                     "win": true,
                     "loss": false,
-                    "score": 0.21957800857083876
+                    "winOdds": 0.21957800857083876
                 },
                 "Wed": {
                     "home": false,
@@ -1220,7 +1220,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Dallas Stars",
                     "win": true,
                     "loss": false,
-                    "score": 0.33625388899287834,
+                    "winOdds": 0.33625388899287834,
                     "offNight": true
                 },
                 "Fri": {
@@ -1230,7 +1230,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Nashville Predators",
                     "win": true,
                     "loss": false,
-                    "score": 0.290253598668656
+                    "winOdds": 0.290253598668656
                 },
                 "totalGamesPlayed": 3,
                 "totalOffNights": 1,
@@ -1253,7 +1253,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Vegas Golden Knights",
                     "win": true,
                     "loss": false,
-                    "score": 0.44467090564095196
+                    "winOdds": 0.44467090564095196
                 },
                 "Wed": {
                     "home": true,
@@ -1262,7 +1262,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Arizona Coyotes",
                     "win": false,
                     "loss": true,
-                    "score": 0.6605566804220405,
+                    "winOdds": 0.6605566804220405,
                     "offNight": true
                 },
                 "Fri": {
@@ -1272,7 +1272,7 @@ describe("Adjust back to back Win Odds", () => {
                     "opponentName": "Anaheim Ducks",
                     "win": true,
                     "loss": false,
-                    "score": 0.548777006107547
+                    "winOdds": 0.548777006107547
                 },
                 "totalGamesPlayed": 3,
                 "totalOffNights": 1,
