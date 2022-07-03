@@ -2,7 +2,7 @@ import { DAYS, TeamRowData } from "../components/GameGrid/TeamRow";
 import getPython from "./initPython";
 
 let runtime: any = null;
-export async function initGameScoreEnv() {
+export async function initWinOddsEnv() {
   if (!runtime) {
     runtime = await getPython;
     const pyCode = await fetch("/pythonScripts/my_script.py").then((res) =>
@@ -15,11 +15,8 @@ export async function initGameScoreEnv() {
   }
 }
 
-export default async function calcGameScore(
-  homeTeam: string,
-  awayTeam: string
-) {
-  // [odds, home_score, away_score]
+export default async function calcWinOdds(homeTeam: string, awayTeam: string) {
+  // [odds, winOdds, xx]
   const result = await runtime.runPythonAsync(
     `get_game_scores("${homeTeam}","${awayTeam}")`
   );
@@ -30,14 +27,14 @@ export default async function calcGameScore(
 
 /**
  * Test if the day is the 2d day of a back-to-back.
- * @param gameScores A list of GameScores
+ * @param winOddsList A list of WinOdds
  * @param day The index of the day
  * @returns true if the `day` is 2d day of a back-to-back. Otherwise, false.
  */
-export function isBackToBack(gameScores: (number | null)[], day: number) {
+export function isBackToBack(winOddsList: (number | null)[], day: number) {
   if (day <= 0) return false;
-  const playedYesterday = gameScores[day - 1] !== null;
-  const playedToday = gameScores[day] !== null;
+  const playedYesterday = winOddsList[day - 1] !== null;
+  const playedToday = winOddsList[day] !== null;
 
   if (!playedToday) return false;
   if (playedYesterday && playedToday) return true;
@@ -45,26 +42,26 @@ export function isBackToBack(gameScores: (number | null)[], day: number) {
 }
 
 /**
- * Convert a TeamRowData to a list of GameScores.
+ * Convert a TeamRowData to a list of WinOdds.
  * @param row A team's stats for a week
- * @returns A list of GameScores. e.g., [null, 0.3, null, 0.3, 6.4, null, 2.7]
+ * @returns A list of WinOdds. e.g., [null, 0.3, null, 0.3, 6.4, null, 2.7]
  */
-export function convertTeamRowToGameScores(row: TeamRowData) {
-  const scores: (number | null)[] = [];
+export function convertTeamRowToWinOddsList(row: TeamRowData) {
+  const winOddsList: (number | null)[] = [];
   DAYS.forEach((day, i) => {
-    const score = row[day]?.score;
-    scores[i] = score !== undefined ? score : null;
+    const winOdds = row[day]?.winOdds;
+    winOddsList[i] = winOdds !== undefined ? winOdds : null;
   });
-  return scores;
+  return winOddsList;
 }
 
 /**
  *
- * Adjust the **GameScore** if a team plays 2x in 2 nights (called a back to back), the gameScore is multiplied by `dilutedFactor` for the second game.
+ * Adjust the **WinOdds** if a team plays 2x in 2 nights (called a back to back), the WinOdds is multiplied by `dilutedFactor` for the second game.
  *
  * If a team also plays a team that is playing game 2/2 in a back to back, no handicap is placed
  *
- * Higher the game Score, the better a chance a team has to win.
+ * Higher the WinOdds, the better a chance a team has to win.
  *
  * Directly operates on the argument.
  *
@@ -76,14 +73,14 @@ export function adjustBackToBackGames(
   dilutedFactor: number = 0.75
 ): void {
   teams.forEach((row) => {
-    const scores = convertTeamRowToGameScores(row);
+    const winOddsList = convertTeamRowToWinOddsList(row);
     DAYS.forEach((day, i) => {
-      const oldScore = row[day]?.score;
-      if (!oldScore) return;
+      const oldWinOdds = row[day]?.winOdds;
+      if (!oldWinOdds) return;
       // test if the current day is the 2d back-to-back game
-      if (isBackToBack(scores, i)) {
+      if (isBackToBack(winOddsList, i)) {
         // multiply by 0.75
-        row[day]!.score = oldScore * dilutedFactor;
+        row[day]!.winOdds = oldWinOdds * dilutedFactor;
       }
       // test if the opponent is also playing a 2d back-to-back game
       const opponent = teams.find((item) => {
@@ -91,10 +88,13 @@ export function adjustBackToBackGames(
       });
 
       if (opponent) {
-        const opponentGameScores = convertTeamRowToGameScores(opponent);
-        if (isBackToBack(scores, i) && isBackToBack(opponentGameScores, i)) {
+        const opponentWinOddsList = convertTeamRowToWinOddsList(opponent);
+        if (
+          isBackToBack(winOddsList, i) &&
+          isBackToBack(opponentWinOddsList, i)
+        ) {
           // don't multiply by 0.75
-          row[day]!.score = oldScore;
+          row[day]!.winOdds = oldWinOdds;
         }
       }
     });
@@ -102,12 +102,12 @@ export function adjustBackToBackGames(
 }
 
 /**
- * GameScore would have to be adjusted to be within a -5 to 5 range, with 50% being 0.
+ * WinOdds would have to be adjusted to be within a -5 to 5 range, with 50% being 0.
   - 75% winOdds = 2.5
   - 25% winOdds = -2.5
- * @param score A floating point number between 0 and 1
- * @returns 
+ * @param winOdds A floating point number between 0 and 1
+ * @returns A string of floating point number within a -5 to 5 range.
  */
-export function formatGameScore(score: number) {
-  return (score * 10 - 5).toFixed(2);
+export function formatWinOdds(winOdds: number) {
+  return (winOdds * 10 - 5).toFixed(2);
 }

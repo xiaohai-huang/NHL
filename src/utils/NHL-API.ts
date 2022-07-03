@@ -5,7 +5,7 @@ import {
   MatchUpCellData,
   TeamRowData,
 } from "../components/GameGrid/TeamRow";
-import calcGameScore, { initGameScoreEnv } from "./calcGameScore";
+import calcWinOdds, { initWinOddsEnv } from "./calcWinOdds";
 import { getDayStr } from "./date-func";
 
 const URL = `https://statsapi.web.nhl.com/api/v1/`;
@@ -40,7 +40,7 @@ type Game = {
   };
 };
 
-const initGameScoreEnvPromise = initGameScoreEnv();
+const initWinOddsEnvPromise = initWinOddsEnv();
 /**
  * API: schedule?startDate=yyyy-mm-dd&endDate=yyyy-mm-dd
  * @param start Date string. e.g., 2020-01-13
@@ -86,7 +86,7 @@ export async function getTeams(
   // console.log(games);
 
   // init python env
-  await initGameScoreEnvPromise;
+  await initWinOddsEnvPromise;
   const temp = new Map<string, { [day: string]: MatchUpCellData }>();
 
   // extract two teams from each game
@@ -104,7 +104,8 @@ export async function getTeams(
             opponentName: away.team.name,
             win: home.score > away.score,
             loss: home.score < away.score,
-            score: await calcGameScore(home.team.name, away.team.name),
+            score: `${home.score}-${away.score}`,
+            winOdds: await calcWinOdds(home.team.name, away.team.name),
           } as MatchUpCellData,
         },
       },
@@ -117,7 +118,8 @@ export async function getTeams(
             opponentName: home.team.name,
             win: away.score > home.score,
             loss: away.score < home.score,
-            score: await calcGameScore(away.team.name, home.team.name),
+            score: `${away.score}-${home.score}`,
+            winOdds: await calcWinOdds(away.team.name, home.team.name),
           } as MatchUpCellData,
         },
       },
@@ -178,7 +180,7 @@ export async function getAllTeams(): Promise<Team[]> {
 }
 
 function getOffNights(totalGamesPerDay: number[]) {
-  const days: string[] = [];
+  const days: Day[] = [];
   totalGamesPerDay.forEach((numGames, i) => {
     // when a day has <= 8 games, mark that day as off night
     if (numGames <= 8) {

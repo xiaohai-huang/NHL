@@ -10,7 +10,7 @@ import { calcTotalOffNights, getTotalGamePlayed } from "../../utils/NHL-API";
 import useTeams from "../../hooks/useTeams";
 import useTitle from "../../hooks/useTitle";
 import calcWeekScore from "../../utils/calcWeekScore";
-import { convertTeamRowToGameScores } from "../../utils/calcGameScore";
+import { convertTeamRowToWinOddsList } from "../../utils/calcWinOdds";
 
 import styles from "./GameGrid.module.css";
 
@@ -44,9 +44,10 @@ export default function GameGrid() {
       row.totalOffNights = totalOffNights;
 
       // add Week Score
-      const gameScores = convertTeamRowToGameScores(row);
+      const winOddsList = convertTeamRowToWinOddsList(row);
+
       row.weekScore = calcWeekScore(
-        gameScores,
+        winOddsList,
         totalOffNights,
         totalGP,
         totalGamesPlayed

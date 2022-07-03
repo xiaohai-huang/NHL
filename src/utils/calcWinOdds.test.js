@@ -1,46 +1,46 @@
-import { adjustBackToBackGames, formatGameScore, isBackToBack } from "./calcGameScore";
+import { adjustBackToBackGames, formatWinOdds, isBackToBack } from "./calcWinOdds";
 
 it('format game score', () => {
-    expect(formatGameScore(0.75)).toEqual("2.50");
-    expect(formatGameScore(0.25)).toEqual("-2.50");
+    expect(formatWinOdds(0.75)).toEqual("2.50");
+    expect(formatWinOdds(0.25)).toEqual("-2.50");
 });
 
 describe("Back to back", () => {
     it("Back to back, begin", () => {
-        const gameScores = [3, 0.3, null, 0.3, 6.4, null, 2.7];
+        const winOddsList = [3, 0.3, null, 0.3, 6.4, null, 2.7];
 
-        expect(isBackToBack(gameScores, 0)).toBe(false);
-        expect(isBackToBack(gameScores, 1)).toBe(true);
-        expect(isBackToBack(gameScores, 2)).toBe(false);
-        expect(isBackToBack(gameScores, 4)).toBe(true);
-        expect(isBackToBack(gameScores, 5)).toBe(false);
-        expect(isBackToBack(gameScores, 6)).toBe(false);
+        expect(isBackToBack(winOddsList, 0)).toBe(false);
+        expect(isBackToBack(winOddsList, 1)).toBe(true);
+        expect(isBackToBack(winOddsList, 2)).toBe(false);
+        expect(isBackToBack(winOddsList, 4)).toBe(true);
+        expect(isBackToBack(winOddsList, 5)).toBe(false);
+        expect(isBackToBack(winOddsList, 6)).toBe(false);
     })
 
     it("Back to back, middle", () => {
-        const gameScores = [null, 0.3, null, 0.3, 6.4, null, 2.7];
+        const winOddsList = [null, 0.3, null, 0.3, 6.4, null, 2.7];
 
-        expect(isBackToBack(gameScores, 0)).toBe(false);
-        expect(isBackToBack(gameScores, 1)).toBe(false);
-        expect(isBackToBack(gameScores, 2)).toBe(false);
-        expect(isBackToBack(gameScores, 4)).toBe(true);
-        expect(isBackToBack(gameScores, 5)).toBe(false);
-        expect(isBackToBack(gameScores, 6)).toBe(false);
+        expect(isBackToBack(winOddsList, 0)).toBe(false);
+        expect(isBackToBack(winOddsList, 1)).toBe(false);
+        expect(isBackToBack(winOddsList, 2)).toBe(false);
+        expect(isBackToBack(winOddsList, 4)).toBe(true);
+        expect(isBackToBack(winOddsList, 5)).toBe(false);
+        expect(isBackToBack(winOddsList, 6)).toBe(false);
     })
 
     it("Back to back, end", () => {
-        const gameScores = [null, 0.3, null, 0.3, null, 1, 2.7];
+        const winOddsList = [null, 0.3, null, 0.3, null, 1, 2.7];
 
-        expect(isBackToBack(gameScores, 0)).toBe(false);
-        expect(isBackToBack(gameScores, 1)).toBe(false);
-        expect(isBackToBack(gameScores, 2)).toBe(false);
-        expect(isBackToBack(gameScores, 4)).toBe(false);
-        expect(isBackToBack(gameScores, 5)).toBe(false);
-        expect(isBackToBack(gameScores, 6)).toBe(true);
+        expect(isBackToBack(winOddsList, 0)).toBe(false);
+        expect(isBackToBack(winOddsList, 1)).toBe(false);
+        expect(isBackToBack(winOddsList, 2)).toBe(false);
+        expect(isBackToBack(winOddsList, 4)).toBe(false);
+        expect(isBackToBack(winOddsList, 5)).toBe(false);
+        expect(isBackToBack(winOddsList, 6)).toBe(true);
     })
 })
 
-describe("Adjust back to back game scores", () => {
+describe("Adjust back to back Win Odds", () => {
     const dilutedFactor = 0.75
     it("No back to back games", () => {
         const expected = [
