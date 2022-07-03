@@ -1,4 +1,4 @@
-import { formatGameScore } from "../../utils/calcGameScore";
+import { formatWinOdds } from "../../utils/calcWinOdds";
 import { formatWeekScore } from "../../utils/calcWeekScore";
 import styles from "./GameGrid.module.css";
 
@@ -13,9 +13,14 @@ export type MatchUpCellData = {
   win: boolean;
   loss: boolean;
   /**
-   * The game score.
+   * The game score. e.g., 5-2
    */
-  score: number;
+  score: string;
+  /**
+   * The win odds of a game. A number between -5 and 5.
+   * e.g., 0.51, -1.06
+   */
+  winOdds: number;
   /**
    * if the total # of games played that day was <=8
    * to signify what I call an “Off-Night”
@@ -80,15 +85,19 @@ function MatchUpCell({
   logo,
   opponentName,
   score,
+  winOdds,
 }: MatchUpCellData) {
   let text = "";
+  let stat = "";
   // game with result
   if (win || loss) {
     text = win ? "WIN" : "LOSS";
+    stat = score;
   }
   // game without result, display home/away
   else {
     text = home ? "HOME" : "AWAY";
+    stat = formatWinOdds(winOdds);
   }
 
   return (
@@ -101,7 +110,7 @@ function MatchUpCell({
         }}
       >
         <span className={styles.homeAway}>{text}</span>
-        <p className={styles.score}>{formatGameScore(score)}</p>
+        <p className={styles.score}>{stat}</p>
       </div>
       <img
         alt={`${opponentName} logo`}

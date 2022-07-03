@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { DAYS, TeamRowData } from "../components/GameGrid/TeamRow";
-import { adjustBackToBackGames } from "../utils/calcGameScore";
+import { adjustBackToBackGames } from "../utils/calcWinOdds";
 import { getAllTeams, getTeams, Team } from "../utils/NHL-API";
 
 export default function useTeams(
